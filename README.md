@@ -39,5 +39,5 @@ It allows companies to **register, login, and manage important documents** (uplo
 
 ---
 
-## 📌 Folder Structure
+
 
