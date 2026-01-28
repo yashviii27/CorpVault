@@ -1,0 +1,123 @@
+﻿@page
+@model CorpVault.Pages.Auth.RegisterModel
+
+<style>
+    .register-card {
+        max-width: 420px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #6c757d;
+        user-select: none;
+    }
+
+    .strength-bar {
+        height: 6px;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+</style>
+
+<form method="post" class="card p-4 mx-auto mt-5 register-card">
+    <h4 class="mb-3 text-center">🏢 Company Registration</h4>
+    <div asp-validation-summary="All" class="text-danger mb-2 text-center"></div>
+
+
+    <!-- Company Name -->
+    <input asp-for="CompanyName"
+           class="form-control mb-2"
+           placeholder="Company Name" />
+
+    <span asp-validation-for="CompanyName" class="text-danger"></span>
+
+    <!-- Admin Email -->
+    <input asp-for="Email"
+           class="form-control mb-2"
+           placeholder="Admin Email" />
+
+    <span asp-validation-for="Email" class="text-danger"></span>
+
+    <!-- Password with toggle -->
+    <div class="password-wrapper mb-2">
+        <input asp-for="Password"
+               id="passwordInput"
+               type="password"
+               class="form-control"
+               placeholder="Create password"
+               oninput="checkStrength()" />
+
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+    </div>
+
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    <!-- Password strength -->
+    <div class="progress mb-3">
+        <div id="strengthBar" class="progress-bar strength-bar"></div>
+    </div>
+
+    <button class="btn btn-primary w-100">
+        Register
+    </button>
+
+    <div class="text-center mt-3">
+        <small>
+            Already have an account?
+            <a asp-page="/Auth/Login">Login</a>
+        </small>
+    </div>
+</form>
+
+<script>
+    function togglePassword() {
+        const input = document.getElementById("passwordInput");
+        input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function checkStrength() {
+        const password = document.getElementById("passwordInput").value;
+        const bar = document.getElementById("strengthBar");
+
+        let strength = 0;
+
+        if (password.length >= 6) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        switch (strength) {
+            case 0:
+                bar.style.width = "0%";
+                bar.className = "progress-bar strength-bar";
+                break;
+            case 1:
+                bar.style.width = "25%";
+                bar.className = "progress-bar bg-danger strength-bar";
+                break;
+            case 2:
+                bar.style.width = "50%";
+                bar.className = "progress-bar bg-warning strength-bar";
+                break;
+            case 3:
+                bar.style.width = "75%";
+                bar.className = "progress-bar bg-info strength-bar";
+                break;
+            case 4:
+                bar.style.width = "100%";
+                bar.className = "progress-bar bg-success strength-bar";
+                break;
+        }
+    }
+</script>
